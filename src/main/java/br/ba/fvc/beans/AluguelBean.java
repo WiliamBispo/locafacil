@@ -93,7 +93,7 @@ public class AluguelBean implements Serializable {
 
         try {
             aluguelRN = new AluguelRN();
-            
+
             Aluguel aluguelExistente = aluguelRN.consultar(aluguel.getVeiculo().getNumero());
 
             if (aluguelExistente != null) {

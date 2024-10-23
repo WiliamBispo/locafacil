@@ -66,7 +66,7 @@ public class FuncionarioBean implements Serializable {
     public void salvar() {
 
         try {
-            
+
             funcionarioRN = new FuncionarioRN();
             funcionarioRN.salvar(funcionario);
 

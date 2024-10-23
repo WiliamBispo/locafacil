@@ -64,8 +64,8 @@ public class FaturamentoBean implements Serializable {
         }
 
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         dataInicio = null;
         dataFim = null;
         totalFaturamento = null;
