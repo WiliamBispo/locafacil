@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      lang="pt-BR" >
+
+    <h:head>
+
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <title>LocaFácil</title>
+
+        <h:outputStylesheet library="css" name="login.css" />
+
+    </h:head>
+
+    <h:body>
+
+        <div class="container">
+
+            <div class="logo">
+                <h:graphicImage library="images" name="logo2.jpg" width="250" />
+            </div>
+
+            <h:form>
+                <h2>Seja Bem Vindo!</h2>
+                <p>Insira seus dados corretamente para acessar o sistema.</p>
+
+                <h:panelGrid columns="2" cellpadding="7">
+
+                    <h:outputLabel for="login" value="Usuário:" />
+                    <h:inputText id="login" value="#{loginBean.login.login}" styleClass="input"/>
+
+
+                    <h:outputLabel for="senha" value="Senha:" />
+                    <h:inputSecret id="senha" value="#{loginBean.login.senha}" styleClass="input"/>
+
+                </h:panelGrid>
+
+                <h:commandButton value="Entrar no Sistema" action="#{loginBean.authenticateUser()}"
+                                 styleClass="button"/>
+            </h:form>
+
+        </div>
+
+    </h:body>
+
+</html>

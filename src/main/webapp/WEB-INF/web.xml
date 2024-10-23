@@ -56,7 +56,7 @@
     </session-config>
     
     <welcome-file-list>
-        <welcome-file>telas/index.fvc</welcome-file>
+        <welcome-file>security/login.fvc</welcome-file>
     </welcome-file-list>
     
 </web-app>
