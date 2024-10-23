@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/layout.xhtml">
+
+    <ui:define name="titulo">
+        Funcionários
+    </ui:define>
+
+    <ui:define name="conteudo">
+
+        <h:form id="frm">
+
+            <p:toolbar id="toolbar">
+                <f:facet name="left">
+
+                    <p:inputText id="termoPesquisar" placeholder="Pesquisar por Nome" 
+                                 size="30" value="#{funcionarioBean.termoPesquisa}" />
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton value="Pesquisar" icon="fa fa-search" 
+                                     actionListener="#{funcionarioBean.pesquisar()}" update="funcionariosDataTable"
+                                     process="@this termoPesquisar"/>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical"/>
+                    </span>
+
+                    <p:commandButton value="Novo" icon="fa fa-plus" 
+                                     actionListener="#{funcionarioBean.prepararNovoFuncionario()}"
+                                     oncomplete="PF('funcionarioDialogWidgetVar').show()" 
+                                     update="funcionarioDialog" process="@this" >
+
+                        <p:resetInput target="funcionarioDialog" />	
+                    </p:commandButton>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Editar" icon="fa fa-edit" 
+                                     disabled="#{not funcionarioBean.funcionarioSelecionadoSeleciona}"
+                                     oncomplete="PF('funcionarioDialogWidgetVarAlt').show()" 
+                                     update="funcionarioDialogAlt" process="@this" >
+
+                        <p:resetInput target="funcionarioDialogAlt" />	
+                    </p:commandButton>
+
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Excluir" icon="fa fa-trash" 
+                                     disabled="#{not funcionarioBean.funcionarioSelecionadoSeleciona}"
+                                     actionListener="#{funcionarioBean.excluir()}" 
+                                     update="funcionariosDataTable toolbar" 
+                                     process="@this" >
+
+                        <p:confirm icon="ui-icon-alert" header="Confirmação de exclusão" message="Deseja excluir o funcionário?" /> 
+                    </p:commandButton>
+
+
+                </f:facet>
+            </p:toolbar>
+
+            <p:spacer height="20px" />
+
+            <p:dataTable id="funcionariosDataTable" value="#{funcionarioBean.listaFuncionarios}"
+                         var="funcionario" emptyMessage="Nenhuma informação a ser exibida"
+                         paginator="true" rows="8" paginatorPosition="bottom" 
+                         selectionMode="single" selection="#{funcionarioBean.funcionarioSelecionado}" rowKey="#{funcionario.id}" >
+
+                <p:ajax event="rowSelect" update="frm:toolbar" />
+
+                <p:ajax event="rowUnselect" update="frm:toolbar" />
+
+                <p:column headerText="Nome" >
+                    <h:outputText value="#{funcionario.nome}" />
+                </p:column>
+
+                <p:column headerText="Cargo">
+                    <h:outputText value="#{funcionario.cargo}" />
+                </p:column>
+
+                <p:column headerText="Email">
+                    <h:outputText value="#{funcionario.email}" />
+                </p:column>
+
+                <p:column headerText="Login">
+                    <h:outputText value="#{funcionario.login}" />
+                </p:column>
+
+            </p:dataTable>
+
+
+            <p:dialog id="funcionarioDialog" header="Novo Funcionário" widgetVar="funcionarioDialogWidgetVar"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="salvarCommandButton" scope="funcionarioDialog" />
+
+                <h:panelGrid id="funcionarioPanelGrid" columns="2"
+                             rendered="#{funcionarioBean.funcionario ne null}" >
+
+                    <p:outputLabel value="Nome: " for="nome" />
+                    <p:inputText id="nome" size="80" maxlength="100" required="true" 
+                                 value="#{funcionarioBean.funcionario.nome}" 
+                                 requiredMessage="O campo nome é obrigatório." 
+                                 validator="nomeValidator" />
+
+                    <p:outputLabel value="Cargo: " for="cargo" />
+                    <p:inputText id="cargo" size="80" maxlength="50" required="true" 
+                                 value="#{funcionarioBean.funcionario.cargo}" 
+                                 requiredMessage="O campo cargo é obrigatório." />
+
+                    <p:outputLabel value="Email: " for="email" />
+                    <p:inputText id="email" size="80" maxlength="100" required="true" 
+                                 value="#{funcionarioBean.funcionario.email}" 
+                                 requiredMessage="O campo email é obrigatório."
+                                 validatorMessage="Email inválido" >  
+                        <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Login: " for="login" />
+                    <p:inputText id="login" size="80" maxlength="20" required="true"
+                                 value="#{funcionarioBean.funcionario.login}" 
+                                 requiredMessage="O campo login é obrigatório." />
+
+
+                    <p:outputLabel value="Senha: " for="senha" />
+                    <p:password id="senha" size="80" maxlength="16" required="true"
+                                value="#{funcionarioBean.funcionario.senha}" 
+                                requiredMessage="O campo senha é obrigatório." 
+                                validatorMessage="A senha deve conter no mínimo 8 digitos." >
+                        <f:validateLength minimum="8" maximum="16" />
+                    </p:password>
+
+
+                    <h:outputLabel />
+
+                    <p:commandButton id="salvarCommandButton" value="Salvar" actionListener="#{funcionarioBean.salvar()}"
+                                     update="funcionariosDataTable funcionarioPanelGrid"
+                                     process="funcionarioPanelGrid" 
+                                     oncomplete="if (!args.validationFailed) {PF('funcionarioDialogWidgetVar').hide();}"/>
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:dialog id="funcionarioDialogAlt" header="Editar Funcionário" widgetVar="funcionarioDialogWidgetVarAlt"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="alterarCommandButton" scope="funcionarioDialogAlt" />
+
+                <h:panelGrid id="funcionarioPanelGridAlt" columns="2"
+                             rendered="#{funcionarioBean.funcionarioSelecionado ne null}">
+
+                    <p:outputLabel value="Nome: " for="nomeAlt" />
+                    <p:inputText id="nomeAlt" size="80" maxlength="100" required="true"
+                                 value="#{funcionarioBean.funcionarioSelecionado.nome}" 
+                                 requiredMessage="O campo nome é obrigatório." 
+                                 validator="nomeValidator" />
+
+                    <p:outputLabel value="Cargo: " for="cargoAlt" />
+                    <p:inputText id="cargoAlt" size="80" maxlength="50" required="true"
+                                 value="#{funcionarioBean.funcionarioSelecionado.cargo}"
+                                 requiredMessage="O campo cargo é obrigatório." />
+
+                    <p:outputLabel value="Email: " for="emailAlt" />
+                    <p:inputText id="emailAlt" size="80" maxlength="100" required="true"
+                                 value="#{funcionarioBean.funcionarioSelecionado.email}"
+                                 requiredMessage="O campo email é obrigatório."
+                                 validatorMessage="Email inválido" >
+                        <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Login " for="loginAlt" />
+                    <p:inputText id="loginAlt" size="80" maxlength="20" required="true"
+                                 value="#{funcionarioBean.funcionarioSelecionado.login}"
+                                 requiredMessage="O campo login é obrigatório." />
+
+                    <p:outputLabel value="Senha: " for="senhaAlt" />
+                    <p:password id="senhaAlt" size="80" maxlength="20" required="true"
+                                value="#{funcionarioBean.funcionarioSelecionado.senha}"
+                                requiredMessage="O campo senha é obrigatório."
+                                validatorMessage="A senha deve conter no mínimo 8 digitos." >
+                        <f:validateLength minimum="8" maximum="16" />
+                    </p:password>
+
+                    <h:outputLabel />
+
+                    <p:commandButton id="alterarCommandButton" value="Alterar" actionListener="#{funcionarioBean.alterar()}"
+                                     update="funcionariosDataTable funcionarioPanelGridAlt"
+                                     process="funcionarioDialogAlt"
+                                     oncomplete="if (!args.validationFailed) { PF('funcionarioDialogWidgetVarAlt').hide(); }"/>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

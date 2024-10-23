@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/layout.xhtml">
+
+    <ui:define name="titulo">
+        Alugueis
+    </ui:define>
+
+    <ui:define name="conteudo">
+
+        <h:form id="frm">
+
+            <p:toolbar id="toolbar">
+                <f:facet name="left">
+
+                    <p:inputText id="termoPesquisar" placeholder="Pesquisar por ID"
+                                 size="30" value="#{aluguelBean.termoPesquisa}" />
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton value="Pesquisar" icon="fa fa-search" 
+                                     actionListener="#{aluguelBean.pesquisar()}" update="alugueisDataTable"
+                                     process="@this termoPesquisar"/>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical"/>
+                    </span>
+
+                    <p:commandButton value="Novo" icon="fa fa-plus" 
+                                     actionListener="#{aluguelBean.prepararNovoAluguel()}"
+                                     oncomplete="PF('aluguelDialogWidgetVar').show()" 
+                                     update="aluguelDialog" process="@this" >
+
+                        <p:resetInput target="aluguelDialog" />	
+                    </p:commandButton>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Editar" icon="fa fa-edit" 
+                                     disabled="#{not aluguelBean.aluguelSelecionadoSeleciona}" 
+                                     oncomplete="PF('aluguelDialogWidgetVarAlt').show()" 
+                                     update="aluguelDialogAlt" process="@this" >
+
+                        <p:resetInput target="aluguelDialogAlt" />	
+                    </p:commandButton>
+
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Excluir" icon="fa fa-trash" 
+                                     disabled="#{not aluguelBean.aluguelSelecionadoSeleciona}" 
+                                     actionListener="#{aluguelBean.excluir()}" 
+                                     update="alugueisDataTable toolbar" 
+                                     process="@this" >
+
+                        <p:confirm icon="ui-icon-alert" header="Confirmação de exclusão" message="Deseja excluir o aluguel?" /> 
+                    </p:commandButton>
+
+
+                </f:facet>
+            </p:toolbar>
+
+            <p:spacer height="20px" />
+
+            <p:dataTable id="alugueisDataTable" value="#{aluguelBean.listaAlugueis}"
+                         var="aluguel" emptyMessage="Nenhuma informação a ser exibida"
+                         paginator="true" rows="8" paginatorPosition="bottom" 
+                         selectionMode="single" selection="#{aluguelBean.aluguelSelecionado}" rowKey="#{aluguel.idAluguel}" >
+
+                <p:ajax event="rowSelect" update="frm:toolbar" />
+
+                <p:ajax event="rowUnselect" update="frm:toolbar" />
+
+                <p:column headerText="ID" >
+                    <h:outputText value="#{aluguel.idAluguel}" />
+                </p:column>
+
+                <p:column headerText="Veículo">
+                    <h:outputText value="#{aluguel.veiculo.placa}" />
+                </p:column>
+
+                <p:column headerText="Data de Retirada">
+                    <h:outputText value="#{aluguel.dataAluguel}"
+                                  converter="javax.faces.DateTime" />    
+                </p:column>
+
+                <p:column headerText="Data de Entrega">
+                    <h:outputText value="#{aluguel.dataEntrega}"
+                                  converter="javax.faces.DateTime" />        
+                </p:column>
+
+                <p:column headerText="Cliente">
+                    <h:outputText value="#{aluguel.cliente.cpf}" />
+                </p:column>
+
+                <p:column headerText="Entregue">
+                    <h:outputText value="#{aluguel.entregue}" />
+                </p:column>
+
+                <p:column headerText="Observação">
+                    <h:outputText value="#{aluguel.observacao}" />
+                </p:column>
+
+                <p:column headerText="Valor Pago">
+                    <h:outputText value="#{aluguel.valorPago}" >
+                        <f:convertNumber groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+                    </h:outputText>
+                </p:column>
+
+            </p:dataTable>
+
+
+            <p:dialog id="aluguelDialog" header="Novo Aluguel" widgetVar="aluguelDialogWidgetVar"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="salvarCommandButton" scope="aluguelDialog" />
+
+                <h:panelGrid id="aluguelPanelGrid" columns="2"
+                             rendered="#{aluguelBean.aluguel ne null}" >
+
+                    <p:outputLabel value="Veículo: " for="veiculo" />
+                    <p:selectOneMenu id="veiculo" value="#{aluguelBean.aluguel.veiculo}" required="true" 
+                                     requiredMessage="O campo veiculo é obrigatório." style="width: 150px;"
+                                     converter="veiculoConverter" >
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{aluguelBean.listaVeiculos}" var="veiculo" itemLabel="#{veiculo.placa}" itemValue="#{veiculo}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Data Retirada: " for="dataAluguel" />
+                    <p:calendar id="dataAluguel"  required="true" pattern="dd/MM/yyyy"
+                                value="#{aluguelBean.aluguel.dataAluguel}"
+                                requiredMessage="O campo data retirada é obrigatório." 
+                                mindate="#{aluguelBean.currentDate}" >
+                        <p:ajax event="dateSelect" update="dataEntrega" />
+                    </p:calendar>
+
+                    <p:outputLabel value="Data Entrega: " for="dataEntrega" />
+                    <p:calendar id="dataEntrega" required="true" pattern="dd/MM/yyyy"
+                                value="#{aluguelBean.aluguel.dataEntrega}"
+                                requiredMessage="O campo data entrega é obrigatório."
+                                mindate="#{aluguelBean.aluguel.dataAluguel}" >
+                        <!--  <f:validator validatorId="dataEntregaValidator" /> -->
+                        <f:attribute name="dataRetirada" value="#{aluguelBean.aluguel.dataAluguel}" />
+                    </p:calendar>
+
+                    <p:outputLabel value="Cliente: " for="cliente" />
+                    <p:selectOneMenu id="cliente" value="#{aluguelBean.aluguel.cliente}" required="true" 
+                                     requiredMessage="O campo cliente é obrigatório." style="width: 150px;"
+                                     converter="clienteConverter" >             
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{aluguelBean.listaClientes}" var="cliente" itemLabel="#{cliente.cpf}" itemValue="#{cliente}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Observação: " for="observacao" />
+                    <p:inputText id="observacao" maxlength="100"
+                                 value="#{aluguelBean.aluguel.observacao}" />
+
+                    <p:outputLabel value="Valor Pago: " for="valorPago" />
+                    <p:inputNumber id="valorPago" value="#{aluguelBean.aluguel.valorPago}"
+                                   required="true" decimalPlaces="2" minValue="0"
+                                   requiredMessage="O campo Valor Pago é obrigatório."
+                                   decimalSeparator="," thousandSeparator="." />
+
+                    <h:outputLabel />
+
+                    <p:commandButton id="salvarCommandButton" value="Salvar" actionListener="#{aluguelBean.salvar()}"
+                                     update="alugueisDataTable aluguelPanelGrid"
+                                     process="aluguelPanelGrid" 
+                                     oncomplete="if (!args.validationFailed) {PF('aluguelDialogWidgetVar').hide();}"/>
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:dialog id="aluguelDialogAlt" header="Editar Aluguel" widgetVar="aluguelDialogWidgetVarAlt"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="alterarCommandButton" scope="aluguelDialogAlt" />
+
+                <h:panelGrid id="aluguelPanelGridAlt" columns="2"
+                             rendered="#{aluguelBean.aluguelSelecionado ne null}">
+
+                    <p:outputLabel value="Veículo: " for="veiculoAlt" />
+                    <p:selectOneMenu id="veiculoAlt" value="#{aluguelBean.aluguelSelecionado.veiculo}" required="true" 
+                                     requiredMessage="O campo veiculo é obrigatório." style="width: 150px;"
+                                     converter="veiculoConverter" >
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{aluguelBean.listaVeiculos}" var="veiculo" itemLabel="#{veiculo.placa}" itemValue="#{veiculo}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Data Retirada: " for="dataAluguelAlt" />
+                    <p:calendar id="dataAluguelAlt"  required="true" pattern="dd/MM/yyyy"
+                                value="#{aluguelBean.aluguelSelecionado.dataAluguel}"
+                                requiredMessage="O campo data retirada é obrigatório."
+                                mindate="#{aluguelBean.currentDate}" >
+                        <p:ajax event="dateSelect" update="dataEntregaAlt" />
+                    </p:calendar>
+
+                    <p:outputLabel value="Data Entrega: " for="dataEntregaAlt" />
+                    <p:calendar id="dataEntregaAlt" required="true" pattern="dd/MM/yyyy"
+                                value="#{aluguelBean.aluguelSelecionado.dataEntrega}"
+                                requiredMessage="O campo data entrega é obrigatório."
+                                mindate="#{aluguelBean.aluguelSelecionado.dataAluguel}" >
+                        <!-- <f:validator validatorId="dataEntregaValidator" /> -->
+                        <f:attribute name="dataRetirada" value="#{aluguelBean.aluguelSelecionado.dataAluguel}" />
+                    </p:calendar>
+
+                    <p:outputLabel value="Cliente: " for="clienteAlt" />
+                    <p:selectOneMenu id="clienteAlt" value="#{aluguelBean.aluguelSelecionado.cliente}" required="true" 
+                                     requiredMessage="O campo cliente é obrigatório." style="width: 150px;"
+                                     converter="clienteConverter" >             
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{aluguelBean.listaClientes}" var="cliente" itemLabel="#{cliente.cpf}" itemValue="#{cliente}" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Entregue: " for="entregueAlt" />
+                    <p:selectOneMenu id="entregueAlt"  value="#{aluguelBean.aluguelSelecionado.entregue}" required="true" >
+                        <f:selectItem itemLabel="N" itemValue="N" />
+                        <f:selectItem itemLabel="S" itemValue="S" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Observação: " for="observacaoAlt" />
+                    <p:inputText id="observacaoAlt" maxlength="100"
+                                 value="#{aluguelBean.aluguelSelecionado.observacao}" />
+
+                    <p:outputLabel value="Valor Pago: " for="valorPagoAlt" />
+                    <p:inputNumber id="valorPagoAlt" value="#{aluguelBean.aluguelSelecionado.valorPago}"
+                                   required="true" decimalPlaces="2" minValue="0"
+                                   requiredMessage="O campo Valor Pago é obrigatório."
+                                   decimalSeparator="," thousandSeparator="." />
+
+                    <h:outputLabel />
+
+                    <p:commandButton id="alterarCommandButton" value="Alterar" actionListener="#{aluguelBean.alterar()}"
+                                     update="alugueisDataTable aluguelPanelGridAlt"
+                                     process="aluguelDialogAlt"
+                                     oncomplete="if (!args.validationFailed) { PF('aluguelDialogWidgetVarAlt').hide(); }"/>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      lang="pt-BR" >
+    <h:head>
+
+        <meta charset="UTF-8"/>
+        <title>LocaFácil</title>
+
+        <h:outputStylesheet library="css" name="estilo.css" />
+
+    </h:head>
+
+    <h:body>
+
+        <p:growl id="grow1" sticky="false" autoUpdate="true" showSummary="true"/> 
+
+        <header>
+            <h:outputLink value="index.fvc"> 
+                <h:graphicImage library="images" name="logo.png" width="150px" style="margin: 7px 10px;"/>
+            </h:outputLink> 
+        </header>
+
+        <h:form id="formMenu">
+            <p:menubar>
+                <p:menuitem value="Home" styleClass="nav" icon="fa fa-home" outcome="index" />
+                <p:menuitem value="Cliente" styleClass="nav" icon="fa fa-user" outcome="cliente" />
+                <p:menuitem value="Veículo" styleClass="nav" icon="fa fa-car icon-spacing" outcome="veiculo" />
+
+                <p:submenu label="Aluguel" icon="fa fa-key icon-spacing" style="margin-right: 18px;" >
+                    <p:menuitem value="Alugueis" outcome="aluguel" />
+                    <p:menuitem value="Faturamento" outcome="faturamento" />
+                    <p:menuitem value="Alugueis Pendentes" outcome="aluguelPendente" />
+                </p:submenu>
+
+                <p:menuitem value="Funcionário" styleClass="nav" icon="fa fa-user" outcome="funcionario" />
+            </p:menubar>
+        </h:form>
+
+        <h2>
+            <ui:insert name="titulo" />
+        </h2>
+
+        <div id="conteudo">		
+            <ui:insert name="conteudo" />	
+        </div>
+
+
+        <h:form>
+            <p:confirmDialog global="true">
+                <p:commandButton value="Sim" icon="fa fa-check" 
+                                 styleClass="ui-confirmdialog-yes" /> 
+
+                <p:commandButton value="Não" icon="fa fa-remove" 
+                                 styleClass="ui-confirmdialog-no" />
+            </p:confirmDialog>
+        </h:form>
+    </h:body>
+
+</html>

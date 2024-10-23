@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/layout.xhtml">
+
+    <ui:define name="titulo">
+        Clientes
+    </ui:define>
+
+    <ui:define name="conteudo">
+
+        <h:form id="frm">
+
+            <p:toolbar id="toolbar">
+                <f:facet name="left">
+
+                    <p:inputText id="termoPesquisar" placeholder="Pesquisar por CPF" 
+                                 size="30" value="#{clienteBean.termoPesquisa}" />
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton value="Pesquisar" icon="fa fa-search" 
+                                     actionListener="#{clienteBean.pesquisar()}" update="clientesDataTable"
+                                     process="@this termoPesquisar"/>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical"/>
+                    </span>
+
+                    <p:commandButton value="Novo" icon="fa fa-plus" 
+                                     actionListener="#{clienteBean.prepararNovoCliente()}"
+                                     oncomplete="PF('clienteDialogWidgetVar').show()" 
+                                     update="clienteDialog" process="@this" >
+
+                        <p:resetInput target="clienteDialog" />	
+                    </p:commandButton>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Editar" icon="fa fa-edit" 
+                                     disabled="#{not clienteBean.clienteSelecionadoSeleciona}" 
+                                     oncomplete="PF('clienteDialogWidgetVarAlt').show()" 
+                                     update="clienteDialogAlt" process="@this" >
+
+                        <p:resetInput target="clienteDialogAlt" />	
+                    </p:commandButton>
+
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Excluir" icon="fa fa-trash" 
+                                     disabled="#{not clienteBean.clienteSelecionadoSeleciona}" 
+                                     actionListener="#{clienteBean.excluir()}" 
+                                     update="clientesDataTable toolbar" 
+                                     process="@this" >
+
+                        <p:confirm icon="ui-icon-alert" header="Confirmação de exclusão" message="Deseja excluir o cliente?" /> 
+                    </p:commandButton>
+
+
+                </f:facet>
+            </p:toolbar>
+
+            <p:spacer height="20px" />
+
+            <p:dataTable id="clientesDataTable" value="#{clienteBean.listaClientes}"
+                         var="cliente" emptyMessage="Nenhuma informação a ser exibida"
+                         paginator="true" rows="8" paginatorPosition="bottom" 
+                         selectionMode="single" selection="#{clienteBean.clienteSelecionado}" rowKey="#{cliente.cpf}" >
+
+                <p:ajax event="rowSelect" update="frm:toolbar" />
+
+                <p:ajax event="rowUnselect" update="frm:toolbar" />
+
+                <p:column headerText="Nome" >
+                    <h:outputText value="#{cliente.nome}" />
+                </p:column>
+
+                <p:column headerText="CPF">
+                    <h:outputText value="#{cliente.cpf}" />
+                </p:column>
+
+                <p:column headerText="Telefone">
+                    <h:outputText value="#{cliente.telefone}" />
+                </p:column>
+
+                <p:column headerText="Email">
+                    <h:outputText value="#{cliente.email}" />
+                </p:column>
+
+                <p:column headerText="Endereço">
+                    <h:outputText value="#{cliente.endereco}" />
+                </p:column>
+
+                <p:column headerText="UF">
+                    <h:outputText value="#{cliente.uf}" />
+                </p:column>
+
+            </p:dataTable>
+
+
+            <p:dialog id="clienteDialog" header="Novo Cliente" widgetVar="clienteDialogWidgetVar"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="salvarCommandButton" scope="clienteDialog" />
+
+                <h:panelGrid id="clientePanelGrid" columns="2"
+                             rendered="#{clienteBean.cliente ne null}" >
+
+                    <p:outputLabel value="Nome: " for="nome" />
+                    <p:inputText id="nome" size="80" maxlength="100" required="true" 
+                                 value="#{clienteBean.cliente.nome}" 
+                                 requiredMessage="O campo nome é obrigatório."
+                                 validator="nomeValidator" />
+
+                    <p:outputLabel value="CPF: " for="cpf" />
+                    <p:inputMask id="cpf" size="80" maxlength="14" 
+                                 mask="999.999.999-99" required="true" 
+                                 value="#{clienteBean.cliente.cpf}" 
+                                 requiredMessage="O campo CPF é obrigatório." >
+                        <f:validateLength minimum="14" maximum="14" />
+                    </p:inputMask>
+
+                    <p:outputLabel value="Telefone: " for="telefone" />
+                    <p:inputMask id="telefone" size="80" maxlength="15" 
+                                 mask="(99) 99999-9999" required="true" 
+                                 value="#{clienteBean.cliente.telefone}" 
+                                 requiredMessage="O campo telefone é obrigatório." >
+                        <f:validateLength minimum="15" maximum="15" />
+                    </p:inputMask>
+
+                    <p:outputLabel value="Email: " for="email" />
+                    <p:inputText id="email" size="80" maxlength="100" required="true"
+                                 value="#{clienteBean.cliente.email}" 
+                                 requiredMessage="O campo email é obrigatório."
+                                 validatorMessage="Formato de email inválido" >            
+                        <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Endereço: " for="endereco" />
+                    <p:inputText id="endereco" size="80" maxlength="120" required="true" 
+                                 value="#{clienteBean.cliente.endereco}" 
+                                 requiredMessage="O campo endereço é obrigatório."
+                                 validator="enderecoValidator" />
+
+                    <p:outputLabel value="UF: " for="uf" />
+                    <p:selectOneMenu id="uf" value="#{clienteBean.cliente.uf}" required="true" 
+                                     requiredMessage="O campo UF é obrigatório." >             
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{clienteBean.listaUFs}" var="uf" itemLabel="#{uf}" itemValue="#{uf}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel />
+
+                    <p:commandButton id="salvarCommandButton" value="Salvar" actionListener="#{clienteBean.salvar()}"
+                                     update="clientesDataTable clientePanelGrid"
+                                     process="clientePanelGrid" 
+                                     oncomplete="if (!args.validationFailed) {PF('clienteDialogWidgetVar').hide();}"/>
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:dialog id="clienteDialogAlt" header="Editar Cliente" widgetVar="clienteDialogWidgetVarAlt"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="alterarCommandButton" scope="clienteDialogAlt" />
+
+                <h:panelGrid id="clientePanelGridAlt" columns="2"
+                             rendered="#{clienteBean.clienteSelecionado ne null}">
+
+                    <p:outputLabel value="Nome: " for="nomeAlt" />
+                    <p:inputText id="nomeAlt" size="80" maxlength="100" required="true"
+                                 value="#{clienteBean.clienteSelecionado.nome}" 
+                                 requiredMessage="O campo nome é obrigatório." 
+                                 validator="nomeValidator" />
+
+                    <p:outputLabel value="CPF: " for="cpfAlt" />
+                    <p:inputMask id="cpfAlt" size="80" maxlength="14" 
+                                 mask="999.999.999-99" readonly="true"
+                                 value="#{clienteBean.clienteSelecionado.cpf}" >
+                        <f:validateLength minimum="14" maximum="14" />
+                    </p:inputMask>
+
+                    <p:outputLabel value="Telefone: " for="telefoneAlt" />
+                    <p:inputMask id="telefoneAlt" size="80" maxlength="15" 
+                                 mask="(99) 99999-9999" required="true" 
+                                 value="#{clienteBean.clienteSelecionado.telefone}"
+                                 requiredMessage="O campo telefone é obrigatório." >
+                        <f:validateLength minimum="15" maximum="15" />
+                    </p:inputMask>
+
+                    <p:outputLabel value="Email: " for="emailAlt" />
+                    <p:inputText id="emailAlt" size="80" maxlength="100" required="true"
+                                 value="#{clienteBean.clienteSelecionado.email}"
+                                 requiredMessage="O campo email é obrigatório."
+                                 validatorMessage="Formato de email inválido" >
+                        <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Endereço: " for="enderecoAlt" />
+                    <p:inputText id="enderecoAlt" size="80" maxlength="120" required="true"
+                                 value="#{clienteBean.clienteSelecionado.endereco}"
+                                 requiredMessage="O campo endereço é obrigatório." 
+                                 validator="enderecoValidator" />
+
+                    <p:outputLabel value="UF: " for="ufAlt" />
+                    <p:selectOneMenu id="ufAlt" value="#{clienteBean.clienteSelecionado.uf}" required="true" 
+                                     requiredMessage="O campo UF é obrigatório." >
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{clienteBean.listaUFs}" var="uf" itemLabel="#{uf}" itemValue="#{uf}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel />
+                    <p:commandButton id="alterarCommandButton" value="Alterar" actionListener="#{clienteBean.alterar()}"
+                                     update="clientesDataTable clientePanelGridAlt"
+                                     process="clienteDialogAlt"
+                                     oncomplete="if (!args.validationFailed) { PF('clienteDialogWidgetVarAlt').hide(); }"/>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

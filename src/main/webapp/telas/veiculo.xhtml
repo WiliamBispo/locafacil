@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/layout.xhtml">
+
+    <ui:define name="titulo">
+        Veículos
+    </ui:define>
+
+    <ui:define name="conteudo">
+
+        <h:form id="frm">
+
+            <p:toolbar id="toolbar">
+                <f:facet name="left">
+
+                    <p:inputText id="termoPesquisar" placeholder="Pesquisar por Placa" 
+                                 size="30" value="#{veiculoBean.termoPesquisa}" />
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton value="Pesquisar" icon="fa fa-search" 
+                                     actionListener="#{veiculoBean.pesquisar()}" update="veiculosDataTable"
+                                     process="@this termoPesquisar"/>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical"/>
+                    </span>
+
+                    <p:commandButton value="Novo" icon="fa fa-plus" 
+                                     actionListener="#{veiculoBean.prepararNovoVeiculo()}"
+                                     oncomplete="PF('veiculoDialogWidgetVar').show()" 
+                                     update="veiculoDialog" process="@this" >
+
+                        <p:resetInput target="veiculoDialog" />	
+                    </p:commandButton>
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Editar" icon="fa fa-edit" 
+                                     disabled="#{not veiculoBean.veiculoSelecionadoSeleciona}" 
+                                     oncomplete="PF('veiculoDialogWidgetVarAlt').show()" 
+                                     update="veiculoDialogAlt" process="@this" >
+
+                        <p:resetInput target="veiculoDialogAlt" />	
+                    </p:commandButton>
+
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Excluir" icon="fa fa-trash" 
+                                     disabled="#{not veiculoBean.veiculoSelecionadoSeleciona}" 
+                                     actionListener="#{veiculoBean.excluir()}" 
+                                     update="veiculosDataTable toolbar" 
+                                     process="@this" >
+
+                        <p:confirm icon="ui-icon-alert" header="Confirmação de exclusão" message="Deseja excluir o veículo?" /> 
+                    </p:commandButton>
+
+
+                </f:facet>
+            </p:toolbar>
+
+            <p:spacer height="20px" />
+
+            <p:dataTable id="veiculosDataTable" value="#{veiculoBean.listaVeiculos}"
+                         var="veiculo" emptyMessage="Nenhuma informação a ser exibida"
+                         paginator="true" rows="8" paginatorPosition="bottom" 
+                         selectionMode="single" selection="#{veiculoBean.veiculoSelecionado}" rowKey="#{veiculo.numero}" >
+
+                <p:ajax event="rowSelect" update="frm:toolbar" />
+
+                <p:ajax event="rowUnselect" update="frm:toolbar" />
+
+                <p:column headerText="Placa" >
+                    <h:outputText value="#{veiculo.placa}" />
+                </p:column>
+
+                <p:column headerText="Fabricante">
+                    <h:outputText value="#{veiculo.fabricante}" />
+                </p:column>
+
+                <p:column headerText="Modelo">
+                    <h:outputText value="#{veiculo.modelo}" />
+                </p:column>
+
+                <p:column headerText="Ano">
+                    <h:outputText value="#{veiculo.anoModelo}" />
+                </p:column>
+
+                <p:column headerText="Portas">
+                    <h:outputText value="#{veiculo.qtdPortas}" />
+                </p:column>
+
+                <p:column headerText="Acessorios">
+                    <h:outputText value="#{veiculo.acessorios}" />
+                </p:column>
+
+            </p:dataTable>
+
+
+            <p:dialog id="veiculoDialog" header="Novo Veículo" widgetVar="veiculoDialogWidgetVar"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="salvarCommandButton" scope="veiculoDialog" />
+
+                <h:panelGrid id="veiculoPanelGrid" columns="2"
+                             rendered="#{veiculoBean.veiculo ne null}" >
+
+                    <p:outputLabel value="Placa: " for="placa" />
+                    <p:inputText id="placa" size="80" maxlength="7" required="true" 
+                                 value="#{veiculoBean.veiculo.placa}" 
+                                 requiredMessage="O campo placa é obrigatório."
+                                 validatorMessage="Formato da placa inválido" >
+                        <f:validateRegex pattern="^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Fabricante: " for="fabricante" />
+                    <p:inputText id="fabricante" size="80" maxlength="30" required="true" 
+                                 value="#{veiculoBean.veiculo.fabricante}" 
+                                 requiredMessage="O campo fabricante é obrigatório." />
+
+                    <p:outputLabel value="Modelo: " for="modelo" />
+                    <p:inputText id="modelo" size="80" maxlength="30" required="true" 
+                                 value="#{veiculoBean.veiculo.modelo}" 
+                                 requiredMessage="O campo modelo é obrigatório." />
+
+                    <p:outputLabel value="Ano: " for="ano" />
+                    <p:inputText id="ano" size="80" maxlength="4" required="true"
+                                 value="#{veiculoBean.veiculo.anoModelo}" 
+                                 requiredMessage="O campo ano é obrigatório."
+                                 validator="anoValidator" />
+
+                    <p:outputLabel value="Portas: " for="qtdPortas" />
+                    <p:selectOneMenu id="qtdPortas" value="#{veiculoBean.veiculo.qtdPortas}" required="true" 
+                                     requiredMessage="O campo portas é obrigatório." >
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItem itemLabel="2 Portas" itemValue="2" />
+                        <f:selectItem itemLabel="4 Portas" itemValue="4" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Acessorios: " for="acessorios" />
+                    <p:inputText id="acessorios" size="80" maxlength="100"
+                                 value="#{veiculoBean.veiculo.acessorios}" />
+
+                    <h:outputLabel />
+
+                    <p:commandButton id="salvarCommandButton" value="Salvar" actionListener="#{veiculoBean.salvar()}"
+                                     update="veiculosDataTable veiculoPanelGrid"
+                                     process="veiculoPanelGrid" 
+                                     oncomplete="if (!args.validationFailed) {PF('veiculoDialogWidgetVar').hide();}"/>
+                </h:panelGrid>
+            </p:dialog>
+
+
+            <p:dialog id="veiculoDialogAlt" header="Editar Veículo" widgetVar="veiculoDialogWidgetVarAlt"
+                      modal="true" resizable="false" closeOnEscape="true">
+
+                <p:defaultCommand target="alterarCommandButton" scope="veiculoDialogAlt" />
+
+                <h:panelGrid id="veiculoPanelGridAlt" columns="2"
+                             rendered="#{veiculoBean.veiculoSelecionado ne null}">
+
+                    <p:outputLabel value="Placa: " for="placaAlt" />
+                    <p:inputText id="placaAlt" size="80" maxlength="7" readonly="true"
+                                 value="#{veiculoBean.veiculoSelecionado.placa}"
+                                 validatorMessage="Formato da placa inválido" >
+                        <f:validateRegex pattern="^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$" />
+                    </p:inputText>
+
+                    <p:outputLabel value="Fabricante: " for="fabricanteAlt" />
+                    <p:inputText id="fabricanteAlt" size="80" maxlength="30" required="true" 
+                                 value="#{veiculoBean.veiculoSelecionado.fabricante}" 
+                                 requiredMessage="O campo fabricante é obrigatório." />
+
+                    <p:outputLabel value="Modelo: " for="modeloAlt" />
+                    <p:inputText id="modeloAlt" size="80" maxlength="30" required="true"   
+                                 value="#{veiculoBean.veiculoSelecionado.modelo}" 
+                                 requiredMessage="O campo modelo é obrigatório." />
+
+                    <p:outputLabel value="Ano: " for="anoAlt" />
+                    <p:inputText id="anoAlt" size="80" maxlength="4" required="true"
+                                 value="#{veiculoBean.veiculoSelecionado.anoModelo}"
+                                 requiredMessage="O campo ano é obrigatório."
+                                 validator="anoValidator" />
+
+                    <p:outputLabel value="Portas: " for="qtdPortasAlt" />
+                    <p:selectOneMenu id="qtdPortasAlt" value="#{veiculoBean.veiculoSelecionado.qtdPortas}" required="true" 
+                                     requiredMessage="O campo portas é obrigatório." >
+                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
+                        <f:selectItem itemLabel="2 Portas" itemValue="2" />
+                        <f:selectItem itemLabel="4 Portas" itemValue="4" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Acessorios: " for="acessoriosAlt" />
+                    <p:inputText id="acessoriosAlt" size="80" maxlength="100"
+                                 value="#{veiculoBean.veiculoSelecionado.acessorios}" />
+
+                    <h:outputLabel />
+
+                    <p:commandButton id="alterarCommandButton" value="Alterar" actionListener="#{veiculoBean.alterar()}"
+                                     update="veiculosDataTable veiculoPanelGridAlt"
+                                     process="veiculoDialogAlt"
+                                     oncomplete="if (!args.validationFailed) { PF('veiculoDialogWidgetVarAlt').hide(); }"/>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>
