@@ -3,6 +3,7 @@ package br.ba.fvc.beans;
 import br.ba.fvc.mapeamento.Funcionario;
 import br.ba.fvc.mapeamento.Login;
 import br.ba.fvc.rn.FuncionarioRN;
+import br.ba.fvc.util.PasswordUtil;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,23 +36,25 @@ public class LoginBean implements Serializable {
 
         funcionarioRN = new FuncionarioRN();
 
-        Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(login);
+        Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(login.getLogin());
 
         if (funcionarioExistente != null) {
+            String hashedPassword = funcionarioExistente.getSenha();
 
-            HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-            session.setAttribute("usuario", login);
+            if (PasswordUtil.checkPassword(login.getSenha(), hashedPassword)) {
 
-            return "/telas/index?faces-redirect=true";
+                HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+                session.setAttribute("usuario", login);
 
-        } else {
-
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.getExternalContext().getFlash().setKeepMessages(true);
-            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário Inválido!", "Erro"));
-
-            return "/security/login?faces-redirect=true";
+                return "/telas/index?faces-redirect=true";
+            }
         }
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.getExternalContext().getFlash().setKeepMessages(true);
+        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário ou senha inválidos!", "Erro"));
+
+        return "/security/login?faces-redirect=true";
     }
 
     public String logout() {

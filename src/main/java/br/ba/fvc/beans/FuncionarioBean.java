@@ -3,6 +3,7 @@ package br.ba.fvc.beans;
 import br.ba.fvc.mapeamento.Funcionario;
 import br.ba.fvc.rn.FuncionarioRN;
 import br.ba.fvc.util.FacesMessages;
+import br.ba.fvc.util.PasswordUtil;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -68,6 +69,10 @@ public class FuncionarioBean implements Serializable {
         try {
 
             funcionarioRN = new FuncionarioRN();
+            
+            String hashedPassword = PasswordUtil.hashPassword(funcionario.getSenha());
+            funcionario.setSenha(hashedPassword);
+            
             funcionarioRN.salvar(funcionario);
 
             this.listaFuncionarios = funcionarioRN.listarSemFiltro();

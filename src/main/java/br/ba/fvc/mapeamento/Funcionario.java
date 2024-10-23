@@ -29,7 +29,7 @@ public class Funcionario implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
 
     @Column(name = "senha")
