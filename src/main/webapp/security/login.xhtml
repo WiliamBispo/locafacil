@@ -29,14 +29,22 @@
                 <h2>Seja Bem Vindo!</h2>
                 <p>Insira seus dados corretamente para acessar o sistema.</p>
 
+                <p:growl id="grow1" sticky="false" autoUpdate="true" showSummary="true"/> 
+                
                 <h:panelGrid columns="2" cellpadding="7">
 
                     <h:outputLabel for="login" value="Usuário:" />
-                    <h:inputText id="login" value="#{loginBean.login.login}" styleClass="input"/>
+                    <h:inputText id="login" required="true"
+                                 value="#{loginBean.login.login}"
+                                 requiredMessage="O campo usuário é obrigatório."
+                                 styleClass="input"/>
 
 
                     <h:outputLabel for="senha" value="Senha:" />
-                    <h:inputSecret id="senha" value="#{loginBean.login.senha}" styleClass="input"/>
+                    <h:inputSecret id="senha" required="true"
+                                   value="#{loginBean.login.senha}" 
+                                   requiredMessage="O campo senha é obrigatório."
+                                   styleClass="input"/>
 
                 </h:panelGrid>
 

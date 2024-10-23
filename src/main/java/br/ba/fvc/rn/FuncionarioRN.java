@@ -2,6 +2,7 @@ package br.ba.fvc.rn;
 
 import br.ba.fvc.dao.FuncionarioDAOListener;
 import br.ba.fvc.mapeamento.Funcionario;
+import br.ba.fvc.mapeamento.Login;
 import br.ba.fvc.util.FabricaDAO;
 import java.util.List;
 
@@ -31,6 +32,10 @@ public class FuncionarioRN {
 
     public void excluir(Funcionario funcionario) {
         this.funcionarioDao.excluir(funcionario);
+    }
+
+    public Funcionario consultarUsuario(Login login) {
+        return this.funcionarioDao.consultarUsuario(login);
     }
 
 }

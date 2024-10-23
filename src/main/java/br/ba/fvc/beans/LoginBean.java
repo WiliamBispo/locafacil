@@ -1,7 +1,10 @@
 package br.ba.fvc.beans;
 
+import br.ba.fvc.mapeamento.Funcionario;
 import br.ba.fvc.mapeamento.Login;
+import br.ba.fvc.rn.FuncionarioRN;
 import java.io.Serializable;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -11,7 +14,10 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class LoginBean implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private Login login;
+    FuncionarioRN funcionarioRN;
 
     public LoginBean() {
         login = new Login();
@@ -26,7 +32,12 @@ public class LoginBean implements Serializable {
     }
 
     public String authenticateUser() {
-        if (login.getLogin().equals("Admin") && login.getSenha().equals("Admin")) {
+
+        funcionarioRN = new FuncionarioRN();
+
+        Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(login);
+
+        if (funcionarioExistente != null) {
 
             HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             session.setAttribute("usuario", login);
@@ -34,6 +45,11 @@ public class LoginBean implements Serializable {
             return "/telas/index?faces-redirect=true";
 
         } else {
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário Inválido!", "Erro"));
+
             return "/security/login?faces-redirect=true";
         }
     }

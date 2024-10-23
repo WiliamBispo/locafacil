@@ -52,7 +52,7 @@ public class LoginAuth implements Filter {
         } else {
             res.sendRedirect(req.getContextPath() + "/telas/index.fvc");
         }
-
+        
     }
 
     public FilterConfig getFilterConfig() {
