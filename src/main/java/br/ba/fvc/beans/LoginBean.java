@@ -42,30 +42,41 @@ public class LoginBean implements Serializable {
     }
 
     public String authenticateUser() {
+        try {
+            funcionarioRN = new FuncionarioRN();
 
-        funcionarioRN = new FuncionarioRN();
+            Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(login.getLogin());
 
-        Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(login.getLogin());
+            if (funcionarioExistente != null) {
+                String hashedPassword = funcionarioExistente.getSenha();
 
-        if (funcionarioExistente != null) {
-            String hashedPassword = funcionarioExistente.getSenha();
+                if (PasswordUtil.checkPassword(login.getSenha(), hashedPassword)) {
+                    buscarUsuarioDaSessao();
 
-            if (PasswordUtil.checkPassword(login.getSenha(), hashedPassword)) {
+                    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+                    if (session != null) {
+                        session.setAttribute("usuario", login);
+                    }
 
-                buscarUsuarioDaSessao();
-
-                HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-                session.setAttribute("usuario", login);
-
-                return "/telas/index?faces-redirect=true";
+                    return "/telas/index?faces-redirect=true";
+                }
             }
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário ou senha inválidos!", "Erro"));
+
+            return "/security/login?faces-redirect=true";
+
+        } catch (Exception e) {
+            e.printStackTrace(); 
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao autenticar o usuário.", "Erro"));
+
+            return "/security/login?faces-redirect=true";
         }
-
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.getExternalContext().getFlash().setKeepMessages(true);
-        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário ou senha inválidos!", "Erro"));
-
-        return "/security/login?faces-redirect=true";
     }
 
     public String logout() {

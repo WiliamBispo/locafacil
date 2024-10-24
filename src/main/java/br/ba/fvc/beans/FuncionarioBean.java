@@ -69,10 +69,10 @@ public class FuncionarioBean implements Serializable {
         try {
 
             funcionarioRN = new FuncionarioRN();
-            
+
             String hashedPassword = PasswordUtil.hashPassword(funcionario.getSenha());
             funcionario.setSenha(hashedPassword);
-            
+
             funcionarioRN.salvar(funcionario);
 
             this.listaFuncionarios = funcionarioRN.listarSemFiltro();
@@ -109,6 +109,10 @@ public class FuncionarioBean implements Serializable {
     public void alterar() {
         try {
             funcionarioRN = new FuncionarioRN();
+
+            String hashedPassword = PasswordUtil.hashPassword(funcionarioSelecionado.getSenha());
+            funcionarioSelecionado.setSenha(hashedPassword);
+
             funcionarioRN.alterar(funcionarioSelecionado);
             this.listaFuncionarios = funcionarioRN.listarSemFiltro();
 
