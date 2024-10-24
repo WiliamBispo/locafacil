@@ -18,6 +18,7 @@ public class LoginBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Login login;
+    private String nomeUsuario;
     FuncionarioRN funcionarioRN;
 
     public LoginBean() {
@@ -32,6 +33,14 @@ public class LoginBean implements Serializable {
         this.login = login;
     }
 
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
+    }
+
     public String authenticateUser() {
 
         funcionarioRN = new FuncionarioRN();
@@ -42,6 +51,8 @@ public class LoginBean implements Serializable {
             String hashedPassword = funcionarioExistente.getSenha();
 
             if (PasswordUtil.checkPassword(login.getSenha(), hashedPassword)) {
+
+                buscarUsuarioDaSessao();
 
                 HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
                 session.setAttribute("usuario", login);
@@ -62,5 +73,25 @@ public class LoginBean implements Serializable {
 
         return "/security/login?faces-redirect=true";
     }
-    
+
+    public String buscarUsuarioDaSessao() {
+        try {
+
+            funcionarioRN = new FuncionarioRN();
+
+            Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(login.getLogin());
+
+            if (funcionarioExistente != null) {
+                nomeUsuario = funcionarioExistente.getNome();
+
+                return nomeUsuario;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao tentar buscar usuário da sessão!");
+        }
+
+        return null;
+    }
+
 }

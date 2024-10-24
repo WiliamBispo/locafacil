@@ -24,7 +24,9 @@
                 <h:graphicImage library="images" name="logo.png" width="150px" style="margin: 7px 10px;" />
             </h:outputLink>
 
-            <span style="color: #fff; margin-right: 18px; font-size: 16px;">Seja Bem-vindo #{loginBean.login.login}!</span>
+            <span style="color: #fff; margin-right: 18px; font-size: 16px;">
+                #{loginBean.nomeUsuario}
+            </span>
         </header>
 
 
@@ -44,7 +46,9 @@
                 <p:menuitem value="Funcionário" styleClass="nav" icon="fa fa-user" outcome="funcionario" />
 
                 <f:facet name="options">
-                    <p:commandButton value="Logout" icon="fa fa-sign-out" style="margin-right: 11px;" />
+                    <p:commandButton value="Logout" icon="fa fa-sign-out" 
+                                     style="margin-right: 11px;"
+                                     action="#{loginBean.logout()}" />
                 </f:facet>
 
             </p:menubar>
