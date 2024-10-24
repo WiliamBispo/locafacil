@@ -66,6 +66,14 @@
                         <p:confirm icon="ui-icon-alert" header="Confirmação de exclusão" message="Deseja excluir o aluguel?" /> 
                     </p:commandButton>
 
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton title="Exportar para o Excel" icon="fa fa-file-excel-o"
+                                     ajax="false" process="@this" immediate="true" >
+                        <p:dataExporter type="xls" target="alugueisDataTable" fileName="Alugueis" />
+                    </p:commandButton>	
 
                 </f:facet>
             </p:toolbar>
