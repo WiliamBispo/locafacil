@@ -8,12 +8,20 @@ body {
 }
 
 header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 5px;
     margin-bottom: 20px;
     height: 60px;
     background-color: #545454;
     color: #fff;
     box-shadow: 0px 2px 2px #ccc
+}
+
+.imageLogo {
+    display: flex;
+    align-items: center;
 }
 
 h2 {

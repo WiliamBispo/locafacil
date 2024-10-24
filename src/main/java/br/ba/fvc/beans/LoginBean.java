@@ -62,5 +62,5 @@ public class LoginBean implements Serializable {
 
         return "/security/login?faces-redirect=true";
     }
-
+    
 }

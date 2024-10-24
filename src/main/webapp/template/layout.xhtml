@@ -18,11 +18,16 @@
 
         <p:growl id="grow1" sticky="false" autoUpdate="true" showSummary="true"/> 
 
+
         <header>
-            <h:outputLink value="index.fvc"> 
-                <h:graphicImage library="images" name="logo.png" width="150px" style="margin: 7px 10px;"/>
-            </h:outputLink> 
+            <h:outputLink value="index.fvc" styleClass="imageLogo">
+                <h:graphicImage library="images" name="logo.png" width="150px" style="margin: 7px 10px;" />
+            </h:outputLink>
+
+            <span style="color: #fff; margin-right: 18px; font-size: 16px;">Seja Bem-vindo #{loginBean.login.login}!</span>
         </header>
+
+
 
         <h:form id="formMenu">
             <p:menubar>
@@ -37,6 +42,11 @@
                 </p:submenu>
 
                 <p:menuitem value="Funcionário" styleClass="nav" icon="fa fa-user" outcome="funcionario" />
+
+                <f:facet name="options">
+                    <p:commandButton value="Logout" icon="fa fa-sign-out" style="margin-right: 11px;" />
+                </f:facet>
+
             </p:menubar>
         </h:form>
 
