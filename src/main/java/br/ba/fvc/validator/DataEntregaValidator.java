@@ -20,9 +20,7 @@ public class DataEntregaValidator implements Validator {
         Date dataAluguel = (Date) component.getAttributes().get("dataRetirada");
 
         if (dataAluguel == null) {
-            FacesMessage msg = new FacesMessage("Data de retirada não encontrada.");
-            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-            throw new ValidatorException(msg);
+            return;
         }
 
         Date dataEntrega = (Date) value;

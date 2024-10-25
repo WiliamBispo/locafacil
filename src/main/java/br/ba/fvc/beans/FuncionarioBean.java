@@ -70,6 +70,14 @@ public class FuncionarioBean implements Serializable {
 
             funcionarioRN = new FuncionarioRN();
 
+            Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(funcionario.getLogin());
+
+            if (funcionarioExistente != null) {
+                messages = new FacesMessages();
+                messages.info("Já existe um funcionário com este Login");
+                return;
+            }
+
             String hashedPassword = PasswordUtil.hashPassword(funcionario.getSenha());
             funcionario.setSenha(hashedPassword);
 

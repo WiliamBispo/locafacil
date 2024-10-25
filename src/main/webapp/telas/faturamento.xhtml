@@ -22,13 +22,16 @@
 
                     <p:calendar id="dataInicio" value="#{faturamentoBean.dataInicio}"
                                 pattern="dd/MM/yyyy" placeholder="Data Início"
-                                required="true" requiredMessage="Data de início é obrigatória."/>
+                                required="true" requiredMessage="Data de início é obrigatória." >
+                        <p:ajax event="dateSelect" update="dataFim" /> 
+                    </p:calendar>
 
                     <p:outputLabel value=" à " for="dataFim" style="margin: 0 5px;" />
 
                     <p:calendar id="dataFim" value="#{faturamentoBean.dataFim}"
                                 pattern="dd/MM/yyyy" placeholder="Data Fim"
-                                required="true" requiredMessage="Data de fim é obrigatória." />
+                                required="true" requiredMessage="Data de fim é obrigatória."
+                                mindate="#{faturamentoBean.dataInicio}" />
 
                     <span class="ui-separator">
                         <span class="ui-icon ui-icon-grip-dotted-vertical" />
@@ -58,7 +61,7 @@
 
                     <p:commandButton value="limpar" icon="fa fa-eraser"
                                      action="#{faturamentoBean.limparCampos()}"
-                                     update="frm" process="@this" />
+                                     update="frm" process="@form" />
 
                 </f:facet>
             </p:toolbar>
