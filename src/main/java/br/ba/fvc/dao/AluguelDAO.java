@@ -75,7 +75,7 @@ public class AluguelDAO implements AluguelDAOListener {
 
         Query consulta = this.sessao.createQuery(hql);
         consulta.setParameter("dataAtual", new Date());
-        consulta.setParameter("statusEntregue", "N");
+        consulta.setParameter("statusEntregue", 'N');
 
         List<Aluguel> results = (List<Aluguel>) consulta.list();
 
@@ -89,7 +89,7 @@ public class AluguelDAO implements AluguelDAOListener {
 
         Query consulta = this.sessao.createQuery(hql);
         consulta.setParameter("dataAtual", new Date());
-        consulta.setParameter("statusEntregue", "N");
+        consulta.setParameter("statusEntregue", 'N');
         consulta.setParameter("documento", documento);
 
         List<Aluguel> results = (List<Aluguel>) consulta.list();
