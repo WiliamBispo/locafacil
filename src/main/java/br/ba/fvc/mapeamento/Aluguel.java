@@ -26,15 +26,15 @@ public class Aluguel implements Serializable {
     private int idAluguel;
 
     @ManyToOne
-    @JoinColumn(name = "veiculo_id")
+    @JoinColumn(name = "veiculo_id", nullable = false)
     private Veiculo veiculo;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "dataAluguel")
+    @Column(name = "dataAluguel", nullable = false)
     private Date dataAluguel;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "dataEntrega")
+    @Column(name = "dataEntrega", nullable = false)
     private Date dataEntrega;
 
     @ManyToOne
@@ -42,12 +42,12 @@ public class Aluguel implements Serializable {
     private Cliente cliente;
 
     @Column(name = "entregue", nullable = false)
-    private String entregue = "N";
+    private char entregue = 'N';
 
-    @Column(name = "observacao")
+    @Column(name = "observacao", length = 100)
     private String observacao;
 
-    @Column(name = "valorPago")
+    @Column(name = "valorPago", nullable = false)
     private BigDecimal valorPago;
 
     public Aluguel() {
@@ -57,7 +57,7 @@ public class Aluguel implements Serializable {
         this.idAluguel = idAluguel;
     }
 
-    public Aluguel(int idAluguel, Veiculo veiculo, Date dataAluguel, Date dataEntrega, Cliente cliente, String entregue, String observacao, BigDecimal valoPago) {
+    public Aluguel(int idAluguel, Veiculo veiculo, Date dataAluguel, Date dataEntrega, Cliente cliente, char entregue, String observacao, BigDecimal valoPago) {
         this.idAluguel = idAluguel;
         this.veiculo = veiculo;
         this.dataAluguel = dataAluguel;
@@ -108,11 +108,11 @@ public class Aluguel implements Serializable {
         this.cliente = cliente;
     }
 
-    public String getEntregue() {
+    public char getEntregue() {
         return entregue;
     }
 
-    public void setEntregue(String entregue) {
+    public void setEntregue(char entregue) {
         this.entregue = entregue;
     }
 

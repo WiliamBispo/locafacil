@@ -147,7 +147,7 @@
                     </p:inputMask>
 
                     <p:outputLabel value="Email: " for="email" />
-                    <p:inputText id="email" size="80" maxlength="100" required="true"
+                    <p:inputText id="email" size="80" maxlength="150" required="true"
                                  value="#{clienteBean.cliente.email}" 
                                  requiredMessage="O campo email é obrigatório."
                                  validatorMessage="Formato de email inválido" >            
@@ -155,7 +155,7 @@
                     </p:inputText>
 
                     <p:outputLabel value="Endereço: " for="endereco" />
-                    <p:inputText id="endereco" size="80" maxlength="120" required="true" 
+                    <p:inputText id="endereco" size="80" maxlength="200" required="true" 
                                  value="#{clienteBean.cliente.endereco}" 
                                  requiredMessage="O campo endereço é obrigatório."
                                  validator="enderecoValidator" />
@@ -207,7 +207,7 @@
                     </p:inputMask>
 
                     <p:outputLabel value="Email: " for="emailAlt" />
-                    <p:inputText id="emailAlt" size="80" maxlength="100" required="true"
+                    <p:inputText id="emailAlt" size="80" maxlength="150" required="true"
                                  value="#{clienteBean.clienteSelecionado.email}"
                                  requiredMessage="O campo email é obrigatório."
                                  validatorMessage="Formato de email inválido" >
@@ -215,7 +215,7 @@
                     </p:inputText>
 
                     <p:outputLabel value="Endereço: " for="enderecoAlt" />
-                    <p:inputText id="enderecoAlt" size="80" maxlength="120" required="true"
+                    <p:inputText id="enderecoAlt" size="80" maxlength="200" required="true"
                                  value="#{clienteBean.clienteSelecionado.endereco}"
                                  requiredMessage="O campo endereço é obrigatório." 
                                  validator="enderecoValidator" />

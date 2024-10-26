@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "funcionario")
@@ -20,19 +21,24 @@ public class Funcionario implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "nome")
+    @NotEmpty
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "cargo")
+    @NotEmpty
+    @Column(name = "cargo", nullable = false, length = 50) 
     private String cargo;
 
-    @Column(name = "email")
+    @NotEmpty
+    @Column(name = "email", nullable = false, length = 150)
     private String email;
 
-    @Column(name = "login", unique = true)
+    @NotEmpty
+    @Column(name = "login", nullable = false, length = 50, unique = true)
     private String login;
 
-    @Column(name = "senha")
+    @NotEmpty
+    @Column(name = "senha", nullable = false, length = 128)
     private String senha;
 
     public Funcionario() {

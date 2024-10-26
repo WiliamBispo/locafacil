@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "veiculo")
@@ -20,13 +21,16 @@ public class Veiculo implements Serializable {
     @Column(name = "numero")
     private Integer numero;
 
-    @Column(name = "placa")
+    @NotEmpty
+    @Column(name = "placa", nullable = false, length = 7, unique = true)
     private String placa;
 
-    @Column(name = "fabricante")
+    @NotEmpty
+    @Column(name = "fabricante", nullable = false, length = 50)
     private String fabricante;
 
-    @Column(name = "modelo")
+    @NotEmpty
+    @Column(name = "modelo", nullable = false, length = 50)
     private String modelo;
 
     @Column(name = "anoModelo")
@@ -35,7 +39,7 @@ public class Veiculo implements Serializable {
     @Column(name = "qtdPortas")
     private int qtdPortas;
 
-    @Column(name = "acessorios")
+    @Column(name = "acessorios", length = 100)
     private String acessorios;
 
     public Veiculo() {

@@ -218,7 +218,7 @@
                                 value="#{aluguelBean.aluguelSelecionado.dataEntrega}"
                                 requiredMessage="O campo data entrega é obrigatório."
                                 mindate="#{aluguelBean.aluguelSelecionado.dataAluguel}" >
-                        <!-- <f:validator validatorId="dataEntregaValidator" /> -->
+                        <f:validator validatorId="dataEntregaValidator" />
                         <f:attribute name="dataRetirada" value="#{aluguelBean.aluguelSelecionado.dataAluguel}" />
                     </p:calendar>
 

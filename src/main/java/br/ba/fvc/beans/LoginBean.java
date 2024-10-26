@@ -69,7 +69,7 @@ public class LoginBean implements Serializable {
             return "/security/login?faces-redirect=true";
 
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
             facesContext.getExternalContext().getFlash().setKeepMessages(true);

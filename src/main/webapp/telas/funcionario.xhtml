@@ -128,7 +128,7 @@
                                  requiredMessage="O campo cargo é obrigatório." />
 
                     <p:outputLabel value="Email: " for="email" />
-                    <p:inputText id="email" size="80" maxlength="100" required="true" 
+                    <p:inputText id="email" size="80" maxlength="150" required="true" 
                                  value="#{funcionarioBean.funcionario.email}" 
                                  requiredMessage="O campo email é obrigatório."
                                  validatorMessage="Email inválido" >  
@@ -136,7 +136,7 @@
                     </p:inputText>
 
                     <p:outputLabel value="Login: " for="login" />
-                    <p:inputText id="login" size="80" maxlength="20" required="true"
+                    <p:inputText id="login" size="80" maxlength="50" required="true"
                                  value="#{funcionarioBean.funcionario.login}" 
                                  requiredMessage="O campo login é obrigatório." />
 
@@ -180,7 +180,7 @@
                                  requiredMessage="O campo cargo é obrigatório." />
 
                     <p:outputLabel value="Email: " for="emailAlt" />
-                    <p:inputText id="emailAlt" size="80" maxlength="100" required="true"
+                    <p:inputText id="emailAlt" size="80" maxlength="150" required="true"
                                  value="#{funcionarioBean.funcionarioSelecionado.email}"
                                  requiredMessage="O campo email é obrigatório."
                                  validatorMessage="Email inválido" >
@@ -188,12 +188,12 @@
                     </p:inputText>
 
                     <p:outputLabel value="Login " for="loginAlt" />
-                    <p:inputText id="loginAlt" size="80" maxlength="20" required="true" readonly="true"
+                    <p:inputText id="loginAlt" size="80" maxlength="50" required="true" readonly="true"
                                  value="#{funcionarioBean.funcionarioSelecionado.login}"
                                  requiredMessage="O campo login é obrigatório." />
 
                     <p:outputLabel value="Senha: " for="senhaAlt" />
-                    <p:password id="senhaAlt" size="80" maxlength="20" required="true"
+                    <p:password id="senhaAlt" size="80" maxlength="16" required="true"
                                 value="#{funcionarioBean.funcionarioSelecionado.senha}"
                                 requiredMessage="O campo senha é obrigatório."
                                 validatorMessage="A senha deve conter no mínimo 8 digitos." >

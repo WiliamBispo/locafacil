@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "cliente")
@@ -14,22 +15,27 @@ public class Cliente implements Serializable {
     public static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "cpf")
+    @Column(name = "cpf", length = 14)
     private String cpf;
 
-    @Column(name = "nome")
+    @NotEmpty
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "telefone")
+    @NotEmpty
+    @Column(name = "telefone", nullable = false, length = 15)
     private String telefone;
 
-    @Column(name = "email")
+    @NotEmpty
+    @Column(name = "email", nullable = false, length = 150)
     private String email;
 
-    @Column(name = "endereco")
+    @NotEmpty
+    @Column(name = "endereco", nullable = false, length = 200)
     private String endereco;
 
-    @Column(name = "uf")
+    @NotEmpty
+    @Column(name = "uf", nullable = false, length = 2)
     private String uf;
 
     public Cliente() {
@@ -103,13 +109,8 @@ public class Cliente implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 59 * hash + Objects.hashCode(this.cpf);
-        hash = 59 * hash + Objects.hashCode(this.nome);
-        hash = 59 * hash + Objects.hashCode(this.telefone);
-        hash = 59 * hash + Objects.hashCode(this.email);
-        hash = 59 * hash + Objects.hashCode(this.endereco);
-        hash = 59 * hash + Objects.hashCode(this.uf);
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.cpf);
         return hash;
     }
 
@@ -126,21 +127,6 @@ public class Cliente implements Serializable {
         }
         final Cliente other = (Cliente) obj;
         if (!Objects.equals(this.cpf, other.cpf)) {
-            return false;
-        }
-        if (!Objects.equals(this.nome, other.nome)) {
-            return false;
-        }
-        if (!Objects.equals(this.telefone, other.telefone)) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        if (!Objects.equals(this.endereco, other.endereco)) {
-            return false;
-        }
-        if (!Objects.equals(this.uf, other.uf)) {
             return false;
         }
         return true;
