@@ -96,4 +96,30 @@ public class AluguelDAO implements AluguelDAOListener {
 
         return results;
     }
+
+    @Override
+    public Aluguel verificarSeClientePossuiAluguelExistente(String documento) {
+
+        String sql = "SELECT * FROM Aluguel WHERE cliente_id = :documento";
+
+        Query consulta = this.sessao.createSQLQuery(sql).addEntity(Aluguel.class);
+        consulta.setParameter("documento", documento);
+
+        Aluguel result = (Aluguel) consulta.uniqueResult();
+
+        return result;
+    }
+
+    @Override
+    public Aluguel verificarSeVeiculoPossuiAluguelExistente(int documento) {
+
+        String sql = "SELECT * FROM Aluguel WHERE veiculo_id = :documento";
+
+        Query consulta = this.sessao.createSQLQuery(sql).addEntity(Aluguel.class);
+        consulta.setParameter("documento", documento);
+
+        Aluguel result = (Aluguel) consulta.uniqueResult();
+
+        return result;
+    }
 }

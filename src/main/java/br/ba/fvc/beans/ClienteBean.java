@@ -1,6 +1,8 @@
 package br.ba.fvc.beans;
 
+import br.ba.fvc.mapeamento.Aluguel;
 import br.ba.fvc.mapeamento.Cliente;
+import br.ba.fvc.rn.AluguelRN;
 import br.ba.fvc.rn.ClienteRN;
 import br.ba.fvc.util.FacesMessages;
 import java.io.Serializable;
@@ -16,6 +18,7 @@ public class ClienteBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     ClienteRN clienteRN;
+    AluguelRN aluguelRN;
     private Cliente cliente;
     private Cliente clienteSelecionado;
     private String termoPesquisa;
@@ -74,7 +77,6 @@ public class ClienteBean implements Serializable {
     }
 
     public void salvar() {
-
         try {
             clienteRN = new ClienteRN();
 
@@ -134,17 +136,27 @@ public class ClienteBean implements Serializable {
 
     public void excluir() {
         try {
+
+            messages = new FacesMessages();
+
+            aluguelRN = new AluguelRN();
+            Aluguel aluguelExistente = aluguelRN.verificarSeClientePossuiAluguelExistente(clienteSelecionado.getCpf());
+
+            if (aluguelExistente != null) {
+                messages.info("Não é possivel excluir, pois cliente possui aluguel.");
+                return;
+            }
+
             clienteRN = new ClienteRN();
             clienteRN.excluir(clienteSelecionado);
 
             clienteSelecionado = null;
             this.listaClientes = clienteRN.listarSemFiltro();
 
-            messages = new FacesMessages();
             messages.info("Cliente excluído com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao excluir cliente");
+            System.out.println("Erro ao excluir cliente: " + e);
         }
     }
 

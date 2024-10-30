@@ -50,4 +50,12 @@ public class AluguelRN {
         return this.aluguelDao.consultarAluguelPendente(documento);
     }
 
+    public Aluguel verificarSeClientePossuiAluguelExistente(String documento) {
+        return this.aluguelDao.verificarSeClientePossuiAluguelExistente(documento);
+    }
+    
+    public Aluguel verificarSeVeiculoPossuiAluguelExistente(int documento) {
+        return this.aluguelDao.verificarSeVeiculoPossuiAluguelExistente(documento);
+    }
+
 }

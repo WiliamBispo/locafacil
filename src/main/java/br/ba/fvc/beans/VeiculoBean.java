@@ -1,6 +1,8 @@
 package br.ba.fvc.beans;
 
+import br.ba.fvc.mapeamento.Aluguel;
 import br.ba.fvc.mapeamento.Veiculo;
+import br.ba.fvc.rn.AluguelRN;
 import br.ba.fvc.rn.VeiculoRN;
 import br.ba.fvc.util.FacesMessages;
 import java.io.Serializable;
@@ -15,6 +17,7 @@ public class VeiculoBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     VeiculoRN veiculoRN;
+    AluguelRN aluguelRN;
     private Veiculo veiculo;
     private Veiculo veiculoSelecionado;
     private String termoPesquisa;
@@ -135,6 +138,17 @@ public class VeiculoBean implements Serializable {
 
     public void excluir() {
         try {
+
+            messages = new FacesMessages();
+
+            aluguelRN = new AluguelRN();
+            Aluguel aluguelExistente = aluguelRN.verificarSeVeiculoPossuiAluguelExistente(veiculoSelecionado.getNumero());
+
+            if (aluguelExistente != null) {
+                messages.info("Não é possivel excluir, pois veículo possui aluguel.");
+                return;
+            }
+
             veiculoRN = new VeiculoRN();
             veiculoRN.excluir(veiculoSelecionado);
 
@@ -145,7 +159,7 @@ public class VeiculoBean implements Serializable {
             messages.info("Veículo excluído com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao excluir veículo");
+            System.out.println("Erro ao excluir veículo: " + e);
         }
     }
 

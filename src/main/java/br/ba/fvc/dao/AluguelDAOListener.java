@@ -24,4 +24,8 @@ public interface AluguelDAOListener {
 
     void salvar(Aluguel aluguel);
 
+    Aluguel verificarSeClientePossuiAluguelExistente(String documento);
+
+    Aluguel verificarSeVeiculoPossuiAluguelExistente(int documento);
+
 }
