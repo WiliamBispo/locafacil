@@ -32,6 +32,7 @@ public class AluguelBean implements Serializable {
 
     public AluguelBean() {
         aluguel = new Aluguel();
+        messages = new FacesMessages();
         popularDataTable();
     }
 
@@ -90,14 +91,12 @@ public class AluguelBean implements Serializable {
     }
 
     public void salvar() {
-
         try {
             aluguelRN = new AluguelRN();
 
             Aluguel aluguelExistente = aluguelRN.consultar(aluguel.getVeiculo().getNumero());
 
             if (aluguelExistente != null) {
-                messages = new FacesMessages();
                 messages.info("Esse veículo já está alugado e não pode ser alugado novamente!");
                 return;
             }
@@ -106,11 +105,11 @@ public class AluguelBean implements Serializable {
             this.listaAlugueis = aluguelRN.listarSemFiltro();
             aluguel = new Aluguel();
 
-            messages = new FacesMessages();
             messages.info("Aluguel registrado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao salvar aluguel.");
+            messages.error("Erro ao cadastrar o aluguel.");
+            System.err.println("Erro ao salvar aluguel: " + e.getMessage());
         }
     }
 
@@ -143,11 +142,10 @@ public class AluguelBean implements Serializable {
                 listaAlugueis = aluguelRN.pesquisar(termoPesquisarInt);
 
                 if (listaAlugueis.isEmpty()) {
-                    messages = new FacesMessages();
                     messages.info("Sua consulta não retornou registros.");
                 }
+
             } catch (NumberFormatException e) {
-                messages = new FacesMessages();
                 messages.info("O termo de pesquisa deve ser um número válido.");
             }
         } else {
@@ -165,12 +163,11 @@ public class AluguelBean implements Serializable {
             aluguelRN.alterar(aluguelSelecionado);
             this.listaAlugueis = aluguelRN.listarSemFiltro();
 
-            messages = new FacesMessages();
             messages.info("Aluguel alterado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao alterar aluguel");
-
+            messages.error("Erro ao alterar o aluguel.");
+            System.err.println("Erro ao alterar aluguel: " + e.getMessage());
         }
     }
 
@@ -182,11 +179,11 @@ public class AluguelBean implements Serializable {
             aluguelSelecionado = null;
             this.listaAlugueis = aluguelRN.listarSemFiltro();
 
-            messages = new FacesMessages();
             messages.info("Aluguel excluído com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao excluir aluguel");
+            messages.error("Erro ao excluir o aluguel.");
+            System.err.println("Erro ao excluir aluguel: " + e.getMessage());
         }
     }
 

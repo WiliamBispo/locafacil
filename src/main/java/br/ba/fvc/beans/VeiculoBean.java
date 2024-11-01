@@ -27,6 +27,7 @@ public class VeiculoBean implements Serializable {
 
     public VeiculoBean() {
         veiculo = new Veiculo();
+        messages = new FacesMessages();
         popularDataTable();
     }
 
@@ -75,14 +76,12 @@ public class VeiculoBean implements Serializable {
     }
 
     public void salvar() {
-
         try {
             veiculoRN = new VeiculoRN();
 
             Veiculo veiculoExistente = veiculoRN.consultar(veiculo.getPlaca());
 
             if (veiculoExistente != null) {
-                messages = new FacesMessages();
                 messages.info("Já existe um veículo cadastrado com esta placa.");
                 return;
             }
@@ -91,12 +90,11 @@ public class VeiculoBean implements Serializable {
             this.listaVeiculos = veiculoRN.listarSemFiltro();
             veiculo = new Veiculo();
 
-            messages = new FacesMessages();
             messages.info("Veículo cadastrado com sucesso!");
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao salvar veículo");
+            messages.error("Erro ao cadastrar o veículo.");
+            System.err.println("Erro ao salvar veículo: " + e.getMessage());
         }
     }
 
@@ -106,13 +104,19 @@ public class VeiculoBean implements Serializable {
     }
 
     public void pesquisar() {
-        veiculoRN = new VeiculoRN();
-        listaVeiculos = veiculoRN.pesquisar(termoPesquisa);
+        try {
+            veiculoRN = new VeiculoRN();
+            listaVeiculos = veiculoRN.pesquisar(termoPesquisa);
 
-        if (listaVeiculos.isEmpty()) {
-            messages = new FacesMessages();
-            messages.info("Sua consulta não retornou registros.");
+            if (listaVeiculos.isEmpty()) {
+                messages.info("Sua consulta não retornou registros.");
+            }
+
+        } catch (Exception e) {
+            messages.error("Erro ao realizar a pesquisa.");
+            System.err.println("Erro ao realizar a pesquisa: " + e.getMessage());
         }
+
     }
 
     public boolean isVeiculoSelecionadoSeleciona() {
@@ -125,21 +129,16 @@ public class VeiculoBean implements Serializable {
             veiculoRN.alterar(veiculoSelecionado);
             this.listaVeiculos = veiculoRN.listarSemFiltro();
 
-            veiculoSelecionado = new Veiculo();
-
-            messages = new FacesMessages();
             messages.info("Veículo alterado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao alterar veículo");
-
+            messages.error("Erro ao alterar o veículo.");
+            System.err.println("Erro ao alterar veículo: " + e.getMessage());
         }
     }
 
     public void excluir() {
         try {
-
-            messages = new FacesMessages();
 
             aluguelRN = new AluguelRN();
             Aluguel aluguelExistente = aluguelRN.verificarSeVeiculoPossuiAluguelExistente(veiculoSelecionado.getNumero());
@@ -155,11 +154,11 @@ public class VeiculoBean implements Serializable {
             veiculoSelecionado = null;
             this.listaVeiculos = veiculoRN.listarSemFiltro();
 
-            messages = new FacesMessages();
             messages.info("Veículo excluído com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao excluir veículo: " + e);
+            messages.error("Erro ao excluir o veículo.");
+            System.err.println("Erro ao excluir veículo: " + e.getMessage());
         }
     }
 

@@ -21,4 +21,8 @@ public class FacesMessages implements Serializable {
         add(msg, FacesMessage.SEVERITY_INFO);
     }
 
+    public void error(String msg) {
+        add(msg, FacesMessage.SEVERITY_ERROR);
+    }
+
 }

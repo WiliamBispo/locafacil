@@ -198,12 +198,8 @@
                              rendered="#{aluguelBean.aluguelSelecionado ne null}">
 
                     <p:outputLabel value="Veículo: " for="veiculoAlt" />
-                    <p:selectOneMenu id="veiculoAlt" value="#{aluguelBean.aluguelSelecionado.veiculo}" required="true" 
-                                     requiredMessage="O campo veiculo é obrigatório." style="width: 150px;"
-                                     converter="veiculoConverter" >
-                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
-                        <f:selectItems value="#{aluguelBean.listaVeiculos}" var="veiculo" itemLabel="#{veiculo.placa}" itemValue="#{veiculo}" />
-                    </p:selectOneMenu>
+                    <p:inputText id="veiculoAlt" maxlength="7" readonly="true"
+                                 value="#{aluguelBean.aluguelSelecionado.veiculo.placa}" />
 
                     <p:outputLabel value="Data Retirada: " for="dataAluguelAlt" />
                     <p:calendar id="dataAluguelAlt"  required="true" pattern="dd/MM/yyyy"
@@ -223,12 +219,8 @@
                     </p:calendar>
 
                     <p:outputLabel value="Cliente: " for="clienteAlt" />
-                    <p:selectOneMenu id="clienteAlt" value="#{aluguelBean.aluguelSelecionado.cliente}" required="true" 
-                                     requiredMessage="O campo cliente é obrigatório." style="width: 150px;"
-                                     converter="clienteConverter" >             
-                        <f:selectItem itemLabel="Selecione" itemValue="" noSelectionOption="true" />
-                        <f:selectItems value="#{aluguelBean.listaClientes}" var="cliente" itemLabel="#{cliente.cpf}" itemValue="#{cliente}" />
-                    </p:selectOneMenu>
+                    <p:inputText id="clienteAlt" maxlength="7" readonly="true"
+                                 value="#{aluguelBean.aluguelSelecionado.cliente.cpf}" />
 
                     <p:outputLabel value="Entregue: " for="entregueAlt" />
                     <p:selectOneMenu id="entregueAlt"  value="#{aluguelBean.aluguelSelecionado.entregue}" required="true" >

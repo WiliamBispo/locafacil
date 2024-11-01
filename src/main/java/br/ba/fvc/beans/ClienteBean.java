@@ -28,6 +28,7 @@ public class ClienteBean implements Serializable {
 
     public ClienteBean() {
         cliente = new Cliente();
+        messages = new FacesMessages();
         popularDataTable();
         carregarUFs();
     }
@@ -83,7 +84,6 @@ public class ClienteBean implements Serializable {
             Cliente clienteExistente = clienteRN.consultar(cliente.getCpf());
 
             if (clienteExistente != null) {
-                messages = new FacesMessages();
                 messages.info("Já existe um cliente cadastrado com este CPF.");
                 return;
             }
@@ -92,11 +92,11 @@ public class ClienteBean implements Serializable {
             this.listaClientes = clienteRN.listarSemFiltro();
             cliente = new Cliente();
 
-            messages = new FacesMessages();
             messages.info("Cliente cadastrado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao salvar cliente");
+            messages.error("Erro ao cadastrar o cliente.");
+            System.err.println("Erro ao salvar cliente: " + e.getMessage());
         }
     }
 
@@ -106,12 +106,17 @@ public class ClienteBean implements Serializable {
     }
 
     public void pesquisar() {
-        clienteRN = new ClienteRN();
-        listaClientes = clienteRN.pesquisar(termoPesquisa);
+        try {
+            clienteRN = new ClienteRN();
+            listaClientes = clienteRN.pesquisar(termoPesquisa);
 
-        if (listaClientes.isEmpty()) {
-            messages = new FacesMessages();
-            messages.info("Sua consulta não retornou registros.");
+            if (listaClientes.isEmpty()) {
+                messages.info("Sua consulta não retornou registros.");
+            }
+
+        } catch (Exception e) {
+            messages.error("Erro ao realizar a pesquisa.");
+            System.err.println("Erro ao realizar a pesquisa: " + e.getMessage());
         }
     }
 
@@ -125,19 +130,16 @@ public class ClienteBean implements Serializable {
             clienteRN.alterar(clienteSelecionado);
             this.listaClientes = clienteRN.listarSemFiltro();
 
-            messages = new FacesMessages();
             messages.info("Cliente alterado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao alterar cliente");
-
+            messages.error("Erro ao alterar o cliente.");
+            System.err.println("Erro ao alterar cliente: " + e.getMessage());
         }
     }
 
     public void excluir() {
         try {
-
-            messages = new FacesMessages();
 
             aluguelRN = new AluguelRN();
             Aluguel aluguelExistente = aluguelRN.verificarSeClientePossuiAluguelExistente(clienteSelecionado.getCpf());
@@ -156,7 +158,8 @@ public class ClienteBean implements Serializable {
             messages.info("Cliente excluído com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao excluir cliente: " + e);
+            messages.error("Erro ao excluir o cliente.");
+            System.err.println("Erro ao excluir cliente: " + e.getMessage());
         }
     }
 

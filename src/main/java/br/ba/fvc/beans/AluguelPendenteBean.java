@@ -27,6 +27,7 @@ public class AluguelPendenteBean implements Serializable {
 
     public AluguelPendenteBean() {
         aluguelPendente = new Aluguel();
+        messages = new FacesMessages();
         popularDataTable();
     }
 
@@ -56,9 +57,7 @@ public class AluguelPendenteBean implements Serializable {
 
     public void popularDataTable() {
         aluguelRN = new AluguelRN();
-
         listaAlugueisPendentes = aluguelRN.pesquisarAlugueisPendentes();
-
     }
 
     public void pesquisar() {
@@ -71,11 +70,9 @@ public class AluguelPendenteBean implements Serializable {
                 listaAlugueisPendentes = aluguelRN.consultarAluguelPendente(termoPesquisarInt);
 
                 if (listaAlugueisPendentes.isEmpty()) {
-                    messages = new FacesMessages();
                     messages.info("Sua consulta não retornou registros.");
                 }
             } catch (NumberFormatException e) {
-                messages = new FacesMessages();
                 messages.info("O termo de pesquisa deve ser um número válido.");
             }
         } else {

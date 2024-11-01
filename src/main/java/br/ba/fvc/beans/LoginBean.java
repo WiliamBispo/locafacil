@@ -69,11 +69,10 @@ public class LoginBean implements Serializable {
             return "/security/login?faces-redirect=true";
 
         } catch (Exception e) {
-            e.printStackTrace();
-
             FacesContext facesContext = FacesContext.getCurrentInstance();
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao autenticar o usuário.", "Erro"));
+            System.err.println("Erro ao autenticar usuário: " + e.getMessage());
 
             return "/security/login?faces-redirect=true";
         }
@@ -87,7 +86,6 @@ public class LoginBean implements Serializable {
 
     public String buscarUsuarioDaSessao() {
         try {
-
             funcionarioRN = new FuncionarioRN();
 
             Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(login.getLogin());
@@ -99,7 +97,7 @@ public class LoginBean implements Serializable {
             }
 
         } catch (Exception e) {
-            System.out.println("Erro ao tentar buscar usuário da sessão!");
+            System.err.println("Erro ao tentar buscar usuário da sessão: " + e.getMessage());
         }
 
         return null;

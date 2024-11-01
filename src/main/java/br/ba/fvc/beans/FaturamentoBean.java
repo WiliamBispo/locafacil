@@ -2,6 +2,7 @@ package br.ba.fvc.beans;
 
 import br.ba.fvc.mapeamento.Aluguel;
 import br.ba.fvc.rn.AluguelRN;
+import br.ba.fvc.util.FacesMessages;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,7 +20,12 @@ public class FaturamentoBean implements Serializable {
     private Date dataInicio;
     private Date dataFim;
     private BigDecimal totalFaturamento;
+    private FacesMessages messages;
     private List<Aluguel> listaAlugueis;
+
+    public FaturamentoBean() {
+        messages = new FacesMessages();
+    }
 
     public Date getDataInicio() {
         return dataInicio;
@@ -54,13 +60,18 @@ public class FaturamentoBean implements Serializable {
     }
 
     public void calcularFaturamento() {
-        aluguelRN = new AluguelRN();
+        try {
+            aluguelRN = new AluguelRN();
 
-        listaAlugueis = aluguelRN.pesquisarAlugueisPorPeriodo(dataInicio, dataFim);
-        totalFaturamento = BigDecimal.ZERO;
+            listaAlugueis = aluguelRN.pesquisarAlugueisPorPeriodo(dataInicio, dataFim);
+            totalFaturamento = BigDecimal.ZERO;
 
-        for (Aluguel aluguel : listaAlugueis) {
-            totalFaturamento = totalFaturamento.add(aluguel.getValorPago());
+            for (Aluguel aluguel : listaAlugueis) {
+                totalFaturamento = totalFaturamento.add(aluguel.getValorPago());
+            }
+        } catch (Exception e) {
+            messages.error("Erro ao calcular faturamento.");
+            System.err.println("Erro ao calcular faturamento: " + e.getMessage());
         }
 
     }

@@ -24,6 +24,7 @@ public class FuncionarioBean implements Serializable {
 
     public FuncionarioBean() {
         funcionario = new Funcionario();
+        messages = new FacesMessages();
         popularDataTable();
 
     }
@@ -65,15 +66,12 @@ public class FuncionarioBean implements Serializable {
     }
 
     public void salvar() {
-
         try {
-
             funcionarioRN = new FuncionarioRN();
 
             Funcionario funcionarioExistente = funcionarioRN.consultarUsuario(funcionario.getLogin());
 
             if (funcionarioExistente != null) {
-                messages = new FacesMessages();
                 messages.info("Já existe um funcionário com este Login");
                 return;
             }
@@ -86,11 +84,11 @@ public class FuncionarioBean implements Serializable {
             this.listaFuncionarios = funcionarioRN.listarSemFiltro();
             funcionario = new Funcionario();
 
-            messages = new FacesMessages();
             messages.info("Funcionário cadastrado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao salvar funcionário.");
+            messages.error("Erro ao cadastrar o funcionário.");
+            System.err.println("Erro ao salvar funcionário: " + e.getMessage());
         }
     }
 
@@ -100,13 +98,17 @@ public class FuncionarioBean implements Serializable {
     }
 
     public void pesquisar() {
+        try {
+            funcionarioRN = new FuncionarioRN();
+            listaFuncionarios = funcionarioRN.pesquisar(termoPesquisa);
 
-        funcionarioRN = new FuncionarioRN();
-        listaFuncionarios = funcionarioRN.pesquisar(termoPesquisa);
+            if (listaFuncionarios.isEmpty()) {
+                messages.info("Sua consulta não retornou registros.");
+            }
 
-        if (listaFuncionarios.isEmpty()) {
-            messages = new FacesMessages();
-            messages.info("Sua consulta não retornou registros.");
+        } catch (Exception e) {
+            messages.error("Erro ao realizar a pesquisa.");
+            System.err.println("Erro ao realizar a pesquisa: " + e.getMessage());
         }
     }
 
@@ -124,12 +126,11 @@ public class FuncionarioBean implements Serializable {
             funcionarioRN.alterar(funcionarioSelecionado);
             this.listaFuncionarios = funcionarioRN.listarSemFiltro();
 
-            messages = new FacesMessages();
             messages.info("Funcionário alterado com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao alterar funcionário");
-
+            messages.error("Erro ao alterar o funcionário.");
+            System.err.println("Erro ao alterar funcionário: " + e.getMessage());
         }
     }
 
@@ -141,11 +142,11 @@ public class FuncionarioBean implements Serializable {
             funcionarioSelecionado = null;
             this.listaFuncionarios = funcionarioRN.listarSemFiltro();
 
-            messages = new FacesMessages();
             messages.info("Funcionário excluído com sucesso!");
 
         } catch (Exception e) {
-            System.out.println("Erro ao excluir funcionário");
+            messages.error("Erro ao excluir o funcionário.");
+            System.err.println("Erro ao excluir funcionário: " + e.getMessage());
         }
     }
 
